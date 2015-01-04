@@ -8,6 +8,7 @@ package ManagedBeans;
 
 import EJB.UserHandler;
 import EJB.ItemHandler;
+import EJB.AdminHandler;
 import Classes.CartItem;
 import Entity.*;
 
@@ -62,6 +63,9 @@ public class WebshopMB implements Serializable {
     
     @EJB
     private ItemHandler ITEMHANDLER;
+    
+    @EJB
+    private AdminHandler ADMIN;
     
     @Inject
     private Conversation conversation;
