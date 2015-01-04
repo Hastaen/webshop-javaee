@@ -8,6 +8,7 @@ package EJB;
 import javax.ejb.Stateless;
 import javax.persistence.*;
 import Entity.*;
+import java.util.List;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
@@ -191,6 +192,22 @@ public class UserHandler {
             return false;
         }
     }
+    
+     /**
+     * Gets all the users in DB.
+     * @return A List of all the users or empty List if no users exist.
+     */
+    
+    public List<Users> getAllUsers(){
+    
+     Query getAllQuery = em.createNamedQuery("Users.findAll", Users.class);
+       // logInQuery.setParameter("username", username);
+    
+    return (List<Users>) getAllQuery.getResultList();
+    
+    
+    
+}
     
     
     

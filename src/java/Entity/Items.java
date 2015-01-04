@@ -67,8 +67,8 @@ public class Items implements Serializable {
         this.itemid = itemid;
     }
 
-    public Items(Integer itemid, String itemname, int itemstock, int itemprice, String itemdescription) {
-        this.itemid = itemid;
+    public Items( String itemname, int itemstock, int itemprice, String itemdescription) {
+      
         this.itemname = itemname;
         this.itemstock = itemstock;
         this.itemprice = itemprice;

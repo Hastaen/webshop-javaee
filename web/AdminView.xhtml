@@ -3,7 +3,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      id="roothtml">
     <h:head>
         <meta charset="utf-8"></meta>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
@@ -37,7 +39,7 @@
         
         <title>Facelet Title</title>
     </h:head>
-    <h:body>
+    <h:body id="body">
         
         <br/><br/>
            <nav class="navbar navbar-fixed-top navbar-inverse">
@@ -56,9 +58,10 @@
             <li class="active"><h:link value="Home" outcome="index" /></li>
             <li><h:link value="Products" outcome="Products" /></li>
             <li><h:link value="Register" outcome="Register" /></li>
+            <li><h:link rendered="#{webshopMB.isadmin == true}" value="Admin" outcome="AdminView" /></li>
           </ul>
             
-            <h:form class="navbar-form navbar-right">
+        <h:form class="navbar-form navbar-right">
             <h:inputText class="form-control" rendered="#{webshopMB.isloggedin == false}" value="#{webshopMB.username}" />
             <h:inputSecret class="form-control" rendered="#{webshopMB.isloggedin == false}" value="#{webshopMB.userpassword}" />
             <h:commandButton class="btn btn-success" rendered="#{webshopMB.isloggedin == false}" value="Login" action="#{webshopMB.login()}"/>
@@ -69,7 +72,7 @@
       </div><!-- /.container -->
     </nav><!-- /.navbar -->
     <br/>
-    <div class="container">
+    <div class="container" id="divshit">
 
       <div class="row row-offcanvas row-offcanvas-right">
 
@@ -81,9 +84,116 @@
           
         </div><!--/.col-xs-12.col-sm-9-->
         
+        <h2>Items in shop:</h2>
+        <br/> 
+        <table class="table table-hover" id="tableman">
         
-        <h1>YO THIS IS ADMIN!!!</h1>
+                <tr>
+    			<th class="order-table-header">Item</th>
+    			<th class="order-table-header">Quantity</th>
+    			<th class="order-table-header">Price</th>
+                        <th class="order-table-header">Description</th>
+    			<th class="order-table-header"> </th>
+    		</tr>  
+            <ui:repeat var="prod" id="uirepeat" value="#{webshopMB.theproducts}" varStatus="st">
+                
+                <tr>
+                    <td>#{prod.itemname}</td>
+                    <td>#{prod.itemstock}</td>
+                    <td>#{prod.itemprice}</td>
+                    <td>#{prod.itemdescription}</td>
+                    <td>
+                        <h:form>
+                        <h:commandButton class="btn btn-danger"  value="Delete" action="#{webshopMB.deleteItem()}">
+                        <f:param name="itemname" value="#{prod.itemname}" />
+                        </h:commandButton>
+                        </h:form>
+                    </td>
+                </tr>
+                <tr id="tablerow">
+                    
+                    <h:form id="inputform">
+                        <td>
+                            <h:inputText class="form-control" id="inputtext"  />
+                        </td>
+                        <td>
+                    <h:commandButton class="btn btn-success" value="Add quantity" action="#{webshopMB.addItemQuantity()}">
+                        <f:param name="itemname" value="#{prod.itemname}" />
+                        <f:param name="uiindex" value="#{st.index}" />
+                    </h:commandButton>
+                        </td>    
+                    </h:form>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                </tr>
             
+                
+           </ui:repeat>
+                </table>
+        <br/>
+        <h3>Add a new item:</h3>
+        <h:form class="form-horizontal">  
+                   
+            <h:inputText class="form-control" p:placeholder="Item name" value="#{webshopMB.newitemname}"/> 
+            <h:inputText class="form-control" p:placeholder="Item stock" value="#{webshopMB.newitemstock}" />
+            <h:inputText class="form-control" p:placeholder="Item price" value="#{webshopMB.newitemprice}" />
+            <h:inputTextarea rows="3" cols="3" class="form-control" p:placeholder="Item description" value="#{webshopMB.newitemdesc}" />
+                <br/>
+            <h:commandButton class="btn btn-success"  value="Add item" action="#{webshopMB.addItem()}"/>
+                      
+        </h:form>
+        <br/>
+        <h2>Registered users:</h2>
+            <br/>
+        
+        <table class="table table-hover">
+        
+                <tr>
+    			<th class="order-table-header">Username</th>
+    			<th class="order-table-header">First name</th>
+    			<th class="order-table-header">Last name</th>
+                        <th class="order-table-header">Mail</th>
+    			<th class="order-table-header">isAdmin</th>
+                        <th class="order-table-header">isBanned</th>
+                        <th class="order-table-header"> </th>
+                        <th class="order-table-header"> </th>
+    		</tr>  
+            <ui:repeat var="user" value="#{webshopMB.theusers}" >
+                
+                <tr>
+                    <td>#{user.username}</td>
+                    <td>#{user.firstname}</td>
+                    <td>#{user.lastname}</td>
+                    <td>#{user.mail}</td>
+                    <td>#{user.isadmin}</td>
+                    <td>#{user.isbanned}</td>
+                    <td>
+                        <h:form>
+                            <h:commandButton class="btn btn-danger" rendered="#{user.isadmin == false}" value="Give Admin rights" action="#{webshopMB.giveAdmin()}">
+                        <f:param name="username" value="#{user.username}" />
+                        </h:commandButton>
+                            <h:commandButton class="btn btn-success" rendered="#{user.isadmin == true}" value="Remove Admin rights" action="#{webshopMB.removeAdmin()}">
+                        <f:param name="username" value="#{user.username}" />
+                        </h:commandButton>
+                        </h:form>
+                    </td>
+                    <td>
+                        <h:form>
+                        <h:commandButton class="btn btn-success" rendered="#{user.isbanned == false}" value="Ban" action="#{webshopMB.ban()}">
+                        <f:param name="username" value="#{user.username}" />
+                        </h:commandButton>
+                            <h:commandButton class="btn btn-danger" rendered="#{user.isbanned == true}" value="unBan" action="#{webshopMB.unBan()}">
+                        <f:param name="username" value="#{user.username}" />
+                        </h:commandButton>
+                        </h:form>
+                    </td>
+                </tr>
+                
+            
+                
+           </ui:repeat>
+                </table>
           
         
       </div><!--/row-->

@@ -11,13 +11,18 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TransactionRequiredException;
 import Entity.*;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.persistence.PersistenceContext;
 /**
  * Class that provides administrator functions.
  * @author Henrik
  */
+
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Stateless
 public class AdminHandler {
-
+@PersistenceContext(unitName = "Project-WebshopPU")
     private EntityManager em;
     
     /**
@@ -75,9 +80,9 @@ public class AdminHandler {
      * @param name Name of new item.
      * @return True if operation was successful, otherwise false.
      */
-    public boolean addItem(String name) {
+    public boolean addItem(String name, int itemstock, int itemprice, String itemdesc) {
         try {
-            Items newItem = new Items();
+            Items newItem = new Items(name, itemstock, itemprice, itemdesc);
             em.persist(newItem);
             return true;
         }
@@ -114,9 +119,11 @@ public class AdminHandler {
      */
     public boolean addUnits(String item, int amount) {
         try {
+            System.out.println("INSIDE ADMIN");
             Query findItemQuery = em.createNamedQuery("Items.findByItemname", Items.class);
             findItemQuery.setParameter("itemname", item);
             Items result = (Items)findItemQuery.getSingleResult();
+            System.out.println("INSIDE ADMIN, stock chnage");
             result.setItemstock(result.getItemstock() + amount);
             em.merge(result);
             return true;
@@ -126,7 +133,55 @@ public class AdminHandler {
             return false;
         }
     }
+    /**
+     * Sets user as not admin.
+     * @param username
+     * @return true if successful, else false.
+     */
+    public boolean removeAdmin(String username) {
+        try {
+            Query setAdminQuery = em.createNamedQuery("Users.findByUsername", Users.class);
+            setAdminQuery.setParameter("username", username);
+            Users result = (Users)setAdminQuery.getSingleResult();
+            if (result.getUsername().equals(username) && result.getIsadmin()) {
+            result.setIsadmin(Boolean.FALSE);
+            em.merge(result);
+            return true;
+            }
+            else {
+                return false;
+            }
+        }
+        catch (IllegalArgumentException e){
+                System.out.println(e.getStackTrace());
+                return false;
+        }
+    }
     
     
+    /**
+     * Sets user as admin.
+     * @param username
+     * @return true if successful, else false.
+     */
+    public boolean setAdmin(String username) {
+        try {
+            Query setAdminQuery = em.createNamedQuery("Users.findByUsername", Users.class);
+            setAdminQuery.setParameter("username", username);
+            Users result = (Users)setAdminQuery.getSingleResult();
+            if (result.getUsername().equals(username) && !result.getIsadmin()) {
+            result.setIsadmin(Boolean.TRUE);
+            em.merge(result);
+            return true;
+            }
+            else {
+                return false;
+            }
+        }
+        catch (IllegalArgumentException e){
+                System.out.println(e.getStackTrace());
+                return false;
+        }
+    }
     
 }

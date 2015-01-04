@@ -6,23 +6,24 @@
 
 package ManagedBeans;
 
-import EJB.UserHandler;
-import EJB.ItemHandler;
-import EJB.AdminHandler;
 import Classes.CartItem;
+import EJB.AdminHandler;
+import EJB.ItemHandler;
+import EJB.UserHandler;
 import Entity.*;
+import java.io.Serializable;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
-import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
-import javax.inject.Inject;
-import java.util.*;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 /**
  *
  * @author Jonas
@@ -46,17 +47,23 @@ public class WebshopMB implements Serializable {
     
     
     private List<Items> theproducts;
-   // private ArrayList<String> cart = new ArrayList<String>();
+    private List<Users> theusers;
+
+    
+   
     private ArrayList<CartItem> cart =  new ArrayList<CartItem>();
     private int cartsum = 0;
 
    
     private String message = null;
     private String cartmessage = null;
-
-   
+    private int units;
 
     
+    private String newitemname = null;
+    private String newitemstock = null;
+    private String newitemprice = null;
+    private String newitemdesc = null;
     
     @EJB
     private UserHandler USEHAND;
@@ -71,13 +78,14 @@ public class WebshopMB implements Serializable {
     private Conversation conversation;
     
     
-     public String getCartmessage() {
-        return cartmessage;
+     public WebshopMB() {
+      
+        
     }
-
-    public void setCartmessage(String cartmessage) {
-        this.cartmessage = cartmessage;
-    }
+    
+    
+    
+     
     
     
     public void registeraccount(){
@@ -139,6 +147,63 @@ public class WebshopMB implements Serializable {
         cartsum = 0;
     }
     
+    
+    public void deleteItem(){
+        FacesContext fc = FacesContext.getCurrentInstance();
+        String itemname = getItemNameParam(fc);
+        ADMIN.removeItem(itemname);
+    }
+    
+    
+    public void ban(){
+        String username = getParamUsername();
+        ADMIN.banUser(username);
+          
+    }
+    
+    public void unBan(){
+        String username = getParamUsername();
+        ADMIN.unbanUser(username);
+        
+    }
+    
+    public void giveAdmin(){
+        String username = getParamUsername();
+       ADMIN.setAdmin(username);
+    }
+    
+    public void removeAdmin(){
+        
+        String username = getParamUsername();
+       ADMIN.removeAdmin(username);
+    }
+    
+    public void addItem(){
+        ADMIN.addItem(newitemname, Integer.parseInt(newitemstock), Integer.parseInt(newitemprice), newitemdesc);
+        
+        
+    }
+    
+    public void addItemQuantity(){
+        
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map<String,String> params = 
+                fc.getExternalContext().getRequestParameterMap();
+	  String action = params.get("itemname");
+          String uiindex = params.get("uiindex");
+          String un = params.get("uirepeat:"+uiindex+":inputform:inputtext");
+          System.out.println("AIQ param map!! " + params);
+        System.out.println("AIQ param itemname!! " + action);
+        System.out.println("AIQ units!! " + un);
+          if (ADMIN.addUnits(action, Integer.parseInt(un))) {
+            //worked
+            }else{
+              //did not work
+          }
+        
+    }
+    
+    
     public void addToCart(){
         String iname;
         int iprice;
@@ -146,7 +211,7 @@ public class WebshopMB implements Serializable {
         FacesContext fc = FacesContext.getCurrentInstance();
 		iname = getItemNameParam(fc);
                 iprice = getItemPriceParam(fc);
-      //  cart.add(iname);
+      
         ci.setName(iname);
         ci.setPrice(iprice);
         if(isItemInCart(iname) ) {
@@ -193,82 +258,13 @@ public class WebshopMB implements Serializable {
         return action;
     }
 
-    public ArrayList<CartItem> getCart() {
-        return cart;
-    }
-
-    public void setCart(ArrayList<CartItem> cart) {
-        this.cart = cart;
-    }
-    
-    
-    public List<Items> getTheproducts() {
-        this.theproducts =ITEMHANDLER.getAllItems();
-        return theproducts;
-    }
-
-    public void setTheproducts(List<Items> theproducts) {
-        this.theproducts = theproducts;
-    }
-    
-     private void startConversation() {
-        if (conversation.isTransient()) {
-            conversation.begin();
-        }
-    }
-
-    private void stopConversation() {
-        if (!conversation.isTransient()) {
-            conversation.end();
-        }
-    }
-    
-    
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getUserpassword() {
-        return userpassword;
-    }
-
-    public void setUserpassword(String userpassword) {
-        this.userpassword = userpassword;
-    }
-
-    public boolean isIsloggedin() {
-        return isloggedin;
-    }
-
-    public void setIsloggedin(boolean isloggedin) {
-        this.isloggedin = isloggedin;
-    }
-
-    public boolean isIsadmin() {
-        return isadmin;
-    }
-
-    public void setIsadmin(boolean isadmin) {
-        this.isadmin = isadmin;
-    }
-    
-   
-
-    
-    public WebshopMB() {
-       // this.theproducts = new List<Items>;
-        
-    }
-    
-    public List<Items> getItems(){
-        
-       // theproducts = ITEMHANDLER.getAllItems()
-        return ITEMHANDLER.getAllItems();
-        
+    public String getParamUsername(){
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map<String,String> params = 
+                fc.getExternalContext().getRequestParameterMap();
+	  String username = params.get("username");
+          System.out.println("getParamUsername"+username);
+          return username;
         
     }
     
@@ -312,6 +308,54 @@ public class WebshopMB implements Serializable {
         }
     }
     
+     private void startConversation() {
+        if (conversation.isTransient()) {
+            conversation.begin();
+        }
+    }
+
+    private void stopConversation() {
+        if (!conversation.isTransient()) {
+            conversation.end();
+        }
+    }
+    
+    
+   
+    
+    public List<Items> getTheproducts() {
+        this.theproducts =ITEMHANDLER.getAllItems();
+        return theproducts;
+    }
+
+    public void setTheproducts(List<Items> theproducts) {
+        this.theproducts = theproducts;
+    }
+
+    
+   
+    
+    public List<Users> getTheusers() {
+        this.theusers = USEHAND.getAllUsers();
+        return theusers;
+    }
+
+    public void setTheusers(List<Users> theusers) {
+        this.theusers = theusers;
+    }
+    
+    public List<Items> getItems(){
+        
+        return ITEMHANDLER.getAllItems();
+        
+    }
+    
+    public List<Users> getUsers(){
+        return USEHAND.getAllUsers();
+    }
+    
+    
+    
     
     public String getFirstname() {
         return firstname;
@@ -345,4 +389,91 @@ public class WebshopMB implements Serializable {
         this.message = message;
     }
     
+    public String getCartmessage() {
+        return cartmessage;
+    }
+
+    public void setCartmessage(String cartmessage) {
+        this.cartmessage = cartmessage;
+    }
+    
+     public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUserpassword() {
+        return userpassword;
+    }
+
+    public void setUserpassword(String userpassword) {
+        this.userpassword = userpassword;
+    }
+
+    public boolean isIsloggedin() {
+        return isloggedin;
+    }
+
+    public void setIsloggedin(boolean isloggedin) {
+        this.isloggedin = isloggedin;
+    }
+
+    public boolean isIsadmin() {
+        return isadmin;
+    }
+
+    public void setIsadmin(boolean isadmin) {
+        this.isadmin = isadmin;
+    }
+    
+    public ArrayList<CartItem> getCart() {
+        return cart;
+    }
+
+    public void setCart(ArrayList<CartItem> cart) {
+        this.cart = cart;
+    }
+
+    public int getUnits() {
+        return units;
+    }
+
+    public void setUnits(int units) {
+        this.units = units;
+    }
+
+    public String getNewitemname() {
+        return newitemname;
+    }
+
+    public void setNewitemname(String newitemname) {
+        this.newitemname = newitemname;
+    }
+
+    public String getNewitemstock() {
+        return newitemstock;
+    }
+
+    public void setNewitemstock(String newitemstock) {
+        this.newitemstock = newitemstock;
+    }
+
+    public String getNewitemprice() {
+        return newitemprice;
+    }
+
+    public void setNewitemprice(String newitemprice) {
+        this.newitemprice = newitemprice;
+    }
+
+    public String getNewitemdesc() {
+        return newitemdesc;
+    }
+
+    public void setNewitemdesc(String newitemdesc) {
+        this.newitemdesc = newitemdesc;
+    }
 }
