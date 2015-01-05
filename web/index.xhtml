@@ -17,6 +17,7 @@
     <link href="../../dist/css/bootstrap.min.css" rel="stylesheet"></link>
 
     <!-- Custom styles for this template -->
+    <link href="sticky-footer.css" rel="stylesheet"></link>
     <link href="offcanvas.css" rel="stylesheet"></link>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
 
@@ -77,35 +78,16 @@
           <p class="pull-right visible-xs">
             <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
           </p>
+            <br/>
+            <br/>
+            <br/>
           <div class="jumbotron">
             <h1>Welcome dear customer!</h1>
       
-            <h:outputText class="test" value="#{webshopMB.username}"/>
-            <h:outputText class="test" value="#{webshopMB.userpassword}"/>
-            <h:outputText class="test" value="#{webshopMB.isloggedin}"/>
-            <h:outputText class="test" value="#{webshopMB.isadmin}"/>
-            <h:outputText rendered="#{webshopMB.isloggedin == true}"  value="User logged in"/>
-            <h:outputText rendered="#{webshopMB.isloggedin == false}"  value="User not logged in"/>
+           
             <p>Here you can shop for some of the most amazing gnomes in the world. We wish you a pleasant shopping experience!</p>
           </div>
-          <div class="row">
-            <div class="col-xs-6 col-lg-4">
-              <h2>Red Gnomes</h2>
-              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-             
-            </div><!--/.col-xs-6.col-lg-4-->
-            <div class="col-xs-6 col-lg-4">
-              <h2>Green Gnomes</h2>
-              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-              
-            </div><!--/.col-xs-6.col-lg-4-->
-            <div class="col-xs-6 col-lg-4">
-              <h2>Blue Gnomes</h2>
-              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-              
-            </div><!--/.col-xs-6.col-lg-4-->
-           
-          </div><!--/row-->
+         
         </div><!--/.col-xs-12.col-sm-9-->
 
         
@@ -117,6 +99,8 @@
         <p>&copy; Acme Webshop 2014</p>
       </footer>
 
+   
+      
     </div><!--/.container-->
 
 

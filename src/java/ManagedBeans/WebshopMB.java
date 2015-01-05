@@ -120,9 +120,9 @@ public class WebshopMB implements Serializable {
                 tmpName = cart.get(i).getName();
                 tmpAmount = cart.get(i).getAmount();
                 if (ITEMHANDLER.removeUnits(tmpName, tmpAmount)) {
-                    cartmessage = "Your purchase have been registered. Have a good day : )!";
+                    cartmessage = "Your purchase have been registered. Have a good day : )";
                 }else{
-                       cartmessage = "Not enough stock to complete the purchase, pleas try again!. Have a good day : )!";
+                       cartmessage = "Not enough stock to complete the purchase, pleas try again!. Have a good day : )";
                 }
 
             }

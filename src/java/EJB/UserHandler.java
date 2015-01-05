@@ -71,7 +71,7 @@ public class UserHandler {
         try {
             Users result = (Users)logInQuery.getSingleResult();
              System.out.println("Before rescheck " + username +" " +password);
-        if (result.getPassword().equals(password)) {
+        if ((result.getPassword().equals(password)) && (result.getIsbanned() != false)) {
             System.out.println("User could log in with pass (inside UH) " + username +" " +password);
             this.userName = username;
             this.firstName = result.getFirstname();
@@ -87,7 +87,7 @@ public class UserHandler {
             return false;
         }
         } catch (NoResultException e) {
-        System.out.println("NORESULT EXCEPTION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println("NORESULT EXCEPTION in login for:" + username);
         return false;
         }
         
