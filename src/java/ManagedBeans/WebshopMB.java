@@ -109,12 +109,24 @@ public class WebshopMB implements Serializable {
     }
     
     public void buyCart(){
+        String tmpName;
+        int tmpAmount;
         
         if(cart.isEmpty()){
             cartmessage = "You do not have anything in your cart!";
             
         }else{
-            cartmessage = "Your purchase have been registered. Have a good day : )!";
+            for (int i = 0; i < cart.size(); i++) {
+                tmpName = cart.get(i).getName();
+                tmpAmount = cart.get(i).getAmount();
+                if (ITEMHANDLER.removeUnits(tmpName, tmpAmount)) {
+                    cartmessage = "Your purchase have been registered. Have a good day : )!";
+                }else{
+                       cartmessage = "Not enough stock to complete the purchase, pleas try again!. Have a good day : )!";
+                }
+
+            }
+            
         }
         clearcart();
     }
