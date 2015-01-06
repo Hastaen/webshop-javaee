@@ -19,15 +19,27 @@ public class CartItem {
    private int amount;
    private int total;
    
+   
+   /**
+     * Default constructor.
+     */
    public CartItem(){
        
    }
    
+   /**
+     * Constructor.
+     */
    public CartItem(String name, int price, int amount, int total) {
         this.name = name;
         this.price = price;
         this.amount = amount;
    }
+   
+   
+   /**
+     * Constructor.
+     */
    
    public CartItem(String name, int price) {
         this.name = name;

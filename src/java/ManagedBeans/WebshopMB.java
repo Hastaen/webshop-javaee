@@ -14,8 +14,7 @@ import Entity.*;
 import java.io.Serializable;
 import java.util.*;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+
 import javax.ejb.EJB;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
@@ -23,9 +22,9 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
+
 /**
- *
+ * Main ManagedBean that handles calls from JSF view.
  * @author Jonas
  */
 @Named("webshopMB")
@@ -85,10 +84,12 @@ public class WebshopMB implements Serializable {
     }
     
     
-    
+     /**
+     * Creates new user.
+     * @param Will take param from form.
+     * @return The account will be registered or not. The var message will show output in view.
+     */
      
-    
-    
     public void registeraccount(){
         if(USEHAND.registerUser(username, userpassword, lastname, firstname,mail)){
             this.message = "User is now registered, try to login!";
@@ -97,11 +98,21 @@ public class WebshopMB implements Serializable {
         }
     }
     
+    /**
+     * Will send the client to the checkout.xhtml page where the items may be bought.
+     * @return Will redirect the user to checkout.xhtml through faces-config.xml.
+     */
+    
     public String checkout(){
         cartmessage = null;
   
         return "success";
     }
+    
+    /**
+     * Will buy the items in the shopping cart.
+     * @return A cartmessage will show. Depending if there is enough stock of the items the order will be cleared.
+     */
     
     public void buyCart(){
         String tmpName;
@@ -125,35 +136,21 @@ public class WebshopMB implements Serializable {
         }
         clearcart();
     }
-   
-    public void calccartsum(){
-        int amount = 0;
-        int price = 0;
-        cartsum = 0;
-        
-        
-        for (int i = 0; i < cart.size(); i++) {
-            amount = cart.get(i).getAmount();
-            price = cart.get(i).getPrice();
-            cartsum += amount * price;               
-            } 
-        
-    }
-    
-    public int getCartsum() {
-        return cartsum;
-    }
-
-    public void setCartsum(int cartsum) {
-        this.cartsum = cartsum;
-    }
-    
-    
+     
+    /**
+     * Will clear the shopping cart
+     */
     public void clearcart(){
         cart.clear();
         cartsum = 0;
     }
     
+    
+    /**
+     * Will remove item from products. In Admin page
+     * @Param Will take item name from form parameter
+     * @return the item will be deleted from DB. It will not show in webpage anymore.
+     */
     
     public void deleteItem(){
         FacesContext fc = FacesContext.getCurrentInstance();
@@ -162,11 +159,24 @@ public class WebshopMB implements Serializable {
     }
     
     
+    
+    /**
+     * Will ban user, user will not be able to log in . In Admin page
+     * @Param Will take user name from form parameter
+     * @return The user will not be able to log in as normal.
+     */
     public void ban(){
         String username = getParamUsername();
         ADMIN.banUser(username);
           
     }
+    
+    
+    /**
+     * Will remove ban from user. In Admin page
+     * @Param Will take user name from form parameter
+     * @return The user will be able to log in as normal.
+     */
     
     public void unBan(){
         String username = getParamUsername();
@@ -174,10 +184,23 @@ public class WebshopMB implements Serializable {
         
     }
     
+    
+    /**
+     * Will give user admin access. In Admin page
+     * @Param Will take user name from form parameter
+     * @return The user admin access boolean will show in admin page.
+     */
+    
     public void giveAdmin(){
         String username = getParamUsername();
        ADMIN.setAdmin(username);
     }
+    
+    /**
+     * Will remove users admin access. In Admin page
+     * @Param Will take user name from form parameter
+     * @return The user admin access boolean will show in admin page.
+     */
     
     public void removeAdmin(){
         
@@ -185,37 +208,41 @@ public class WebshopMB implements Serializable {
        ADMIN.removeAdmin(username);
     }
     
+    /**
+     * Will add a new item to the database. The new item will be seen by everyone and can be bought
+     * @return The new item will be rendered in the webshop.
+     */
     public void addItem(){
         ADMIN.addItem(newitemname, Integer.parseInt(newitemstock), Integer.parseInt(newitemprice), newitemdesc);
         
         
     }
     
-    
-    
+    /**
+     * Will add more stock to a specific item. (I admin page).
+     * @return will always add the number of units to the stock. No max for units except int.max.
+     */
     
     public void addItemQuantity(){
         
         FacesContext fc = FacesContext.getCurrentInstance();
         Map<String,String> params = 
                 fc.getExternalContext().getRequestParameterMap();
-	  String action = params.get("itemname");
+	  String item = params.get("itemname");
+          //UI:repeat row
           String uiindex = params.get("uiindex");
-          String un = params.get("uirepeat:"+uiindex+":inputform:inputtext");
+          //This is to find the specific item that is to be given more stock. The param is depending on the DOM-tree of UI:REPEATE row 
+          String DOMparam = params.get("uirepeat:"+uiindex+":inputform:inputtext");
         
-          if (ADMIN.addUnits(action, Integer.parseInt(un))) {
-            //worked
-            }else{
-              //did not work
-          }
+          ADMIN.addUnits(item, Integer.parseInt(DOMparam));
+         
         
     }
     
-    /**
-     * Creates new user.
-     * @param Will take param from form, that has the item name.
-     * @return The item will be added to .
-     */
+   /**
+    * Will add the specific item to the users cart.
+    * @Param The item name will be given through form param
+    */
     
     public void addToCart(){
         String iname;
@@ -240,6 +267,25 @@ public class WebshopMB implements Serializable {
            cart.add(ci);
         }
         calccartsum();
+        
+    }
+    
+    /**
+     * Will calculate the total of the items that have been put in the cart.
+     * 
+     */
+    
+     private void calccartsum(){
+        int amount = 0;
+        int price = 0;
+        cartsum = 0;
+        
+        
+        for (int i = 0; i < cart.size(); i++) {
+            amount = cart.get(i).getAmount();
+            price = cart.get(i).getPrice();
+            cartsum += amount * price;               
+            } 
         
     }
     
@@ -290,7 +336,7 @@ public class WebshopMB implements Serializable {
     
     public String login(){
        
-           startConversation();
+        //   startConversation();
         
         System.out.println("Login 1" + username +" " +userpassword);
         
@@ -514,6 +560,14 @@ public class WebshopMB implements Serializable {
 
     public void setErrormessage(String errormessage) {
         this.errormessage = errormessage;
+    }
+    
+     public int getCartsum() {
+        return cartsum;
+    }
+
+    public void setCartsum(int cartsum) {
+        this.cartsum = cartsum;
     }
     
 }

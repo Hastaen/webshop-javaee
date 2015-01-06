@@ -64,7 +64,7 @@
     </navigation-rule>
     
     <navigation-rule>
-    <from-view-id>/index.xhtml</from-view-id>
+    <from-view-id>/ErrorView.xhtml</from-view-id>
     <navigation-case>
         <from-action>#{webshopMB.login()}</from-action>
         <from-outcome>success</from-outcome>

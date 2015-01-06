@@ -13,7 +13,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import java.util.*;
 /**
- *
+ * Class that handles the Item actions on the entity.
  * @author Jonas
  */
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)

@@ -13,7 +13,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 /**
- *
+ * Class that handles actions to User entitys
  * @author Henrik
  */
 
@@ -32,16 +32,15 @@ public class UserHandler {
     /**
      * Default constructor.
      */
-    public void saveUN(String n){
-        this.firstName = n;
-        System.out.println(n);
-    }
+   public UserHandler(){
+       
+   }
     
-    /**
-     * Log in user.
+    
+      /**
+     * Check if user has admin access.
      * @param username
-     * @param password
-     * @return 
+     * @return true if user has admin access, false if not.
      */
     
     public boolean isUserAdmin(String username){
@@ -61,29 +60,38 @@ public class UserHandler {
         return false;
     }
     
+
     
+    /**
+     * Log in user.
+     * @param username
+     * @param password
+     * @return true if user can log in, false if not.
+     */
+
     public boolean logIn(String username, String password) {
         
-        System.out.println("Before EM init " + username +" " +password);
+      
         Query logInQuery = em.createNamedQuery("Users.findByUsername", Users.class);
         logInQuery.setParameter("username", username);
-        System.out.println("Users getsingleres " + username +" " +password);
+      
         try {
             Users result = (Users)logInQuery.getSingleResult();
-             System.out.println("Before rescheck " + username +" " +password);
+            
+            //Check if pass matches and if user is not banned.
         if ((result.getPassword().equals(password)) && (result.getIsbanned() != true) ) {
-            System.out.println("User could log in with pass (inside UH) " + username +" " +password);
+            //User could log in with pass 
             this.userName = username;
             this.firstName = result.getFirstname();
             this.lastName = result.getLastname();
-            if (result.getIsadmin()) {
-                this.isAdmin = true;
-            }
+                if (result.getIsadmin()) {
+                  this.isAdmin = true;
+                }
             loggedIn = true;
             return true;
         }
         else {
-            System.out.println("User could NOT log in with pass (inside UH) " + username +" " +password);
+            //User could NOT log in with pass  
             return false;
         }
         } catch (NoResultException e) {
@@ -93,7 +101,12 @@ public class UserHandler {
         
        
     }
-
+    
+      /**
+     * HELPER FUNCTION, Find user by username.
+     * @param username
+     * @return User if user exists, else null.
+     */
     
     private Users findByUsername(String username) {
         Query logInQuery = em.createNamedQuery("Users.findByUsername", Users.class);
@@ -200,16 +213,10 @@ public class UserHandler {
     
     public List<Users> getAllUsers(){
     
-     Query getAllQuery = em.createNamedQuery("Users.findAll", Users.class);
-       // logInQuery.setParameter("username", username);
-    
-    return (List<Users>) getAllQuery.getResultList();
-    
-    
-    
-}
-    
-    
+        Query getAllQuery = em.createNamedQuery("Users.findAll", Users.class);
+
+        return (List<Users>) getAllQuery.getResultList();
+    }
     
     public String getUserName() {
         return userName;
@@ -223,10 +230,6 @@ public class UserHandler {
         return lastName;
     }
 
-    /**
-     * Returns true if user is admin.
-     * @return 
-     */
     public boolean isIsAdmin() {
         return isAdmin;
     }
