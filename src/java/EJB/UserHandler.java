@@ -129,7 +129,9 @@ public class UserHandler {
      * Creates new user.
      * @param username
      * @param password
-     * @param isAdmin
+     * @param lastname
+     * @param firstname
+     * @param mail
      * @return false if user exists or connection failed, else true.
      */
     public boolean registerUser(String username, String password, String lastname, String firstname , String mail) {
@@ -146,12 +148,10 @@ public class UserHandler {
                 System.out.println(e.getStackTrace());
                 return false;
             }
-          
+        
         }else{
             return false;
-        }
-        
-        
+        }  
     }
     
     /**

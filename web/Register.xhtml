@@ -73,27 +73,20 @@
         
         
          <div class="container">
-             <h:form class="form-signin">
-      
-      <br/>
-      <br/>
-      <br/>
-      <br/>
+        <h:form class="form-signin">
+            <br/><br/><br/><br/>
         <h2 class="form-signin-heading">Register your account</h2>
-        
-        <h:inputText class="form-control" p:placeholder="User name" required="true"  value="#{webshopMB.username}" />
-         <h:inputSecret class="form-control" p:placeholder="Password" required="true" value="#{webshopMB.userpassword}" />
-        <h:inputText class="form-control" p:placeholder="First name" required="true" value="#{webshopMB.firstname}" />
-        <h:inputText class="form-control" p:placeholder="Last name" required="true" value="#{webshopMB.lastname}" />
-        <h:inputText class="form-control" p:placeholder="Mail" required="true" value="#{webshopMB.mail}" />
-        
-       <br/>
-      <br/>
-        <h:commandButton class="btn btn-lg btn-primary btn-block"  value="Register account &raquo;" action="#{webshopMB.registeraccount()}"/>
-      
+            <h:inputText class="form-control" p:placeholder="User name" required="true"  value="#{webshopMB.username}" />
+            <h:inputSecret class="form-control" p:placeholder="Password" required="true" value="#{webshopMB.userpassword}" />
+            <h:inputText class="form-control" p:placeholder="First name" required="true" value="#{webshopMB.firstname}" />
+            <h:inputText class="form-control" p:placeholder="Last name" required="true" value="#{webshopMB.lastname}" />
+            <h:inputText class="form-control" p:placeholder="Mail" required="true" value="#{webshopMB.mail}" />
+       <br/><br/>
+            <h:commandButton class="btn btn-lg btn-primary btn-block"  value="Register account &raquo;" action="#{webshopMB.registeraccount()}"/>
         </h:form>
          </div> <!-- /container -->
-            <h:outputText rendered="#{webshopMB.message != null}"  value="#{webshopMB.message}"/>
+         <h:outputText class="list-group-item" rendered="#{webshopMB.message != null}" value="#{webshopMB.message}"/>
+        
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>

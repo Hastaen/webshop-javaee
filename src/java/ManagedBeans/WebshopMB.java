@@ -153,8 +153,8 @@ public class WebshopMB implements Serializable {
      */
     
     public void deleteItem(){
-        FacesContext fc = FacesContext.getCurrentInstance();
-        String itemname = getItemNameParam(fc);
+       
+        String itemname = getParam("itemname");
         ADMIN.removeItem(itemname);
     }
     
@@ -166,7 +166,7 @@ public class WebshopMB implements Serializable {
      * @return The user will not be able to log in as normal.
      */
     public void ban(){
-        String username = getParamUsername();
+        String username = getParam("username");
         ADMIN.banUser(username);
           
     }
@@ -179,7 +179,7 @@ public class WebshopMB implements Serializable {
      */
     
     public void unBan(){
-        String username = getParamUsername();
+        String username = getParam("username");
         ADMIN.unbanUser(username);
         
     }
@@ -192,7 +192,7 @@ public class WebshopMB implements Serializable {
      */
     
     public void giveAdmin(){
-        String username = getParamUsername();
+        String username = getParam("username");
        ADMIN.setAdmin(username);
     }
     
@@ -204,7 +204,7 @@ public class WebshopMB implements Serializable {
     
     public void removeAdmin(){
         
-        String username = getParamUsername();
+        String username = getParam("username");
        ADMIN.removeAdmin(username);
     }
     
@@ -248,9 +248,9 @@ public class WebshopMB implements Serializable {
         String iname;
         int iprice;
         CartItem ci = new CartItem();
-        FacesContext fc = FacesContext.getCurrentInstance();
-		iname = getItemNameParam(fc);
-                iprice = getItemPriceParam(fc);
+    
+		iname = getParam("itemname");
+                iprice = Integer.parseInt(getParam("itemprice"));
       
         ci.setName(iname);
         ci.setPrice(iprice);
@@ -288,6 +288,12 @@ public class WebshopMB implements Serializable {
             } 
         
     }
+     
+     /**
+     * Will check if specific item in in shopping cart. Private helper function.
+     * @Param name
+     * @Return true of false depending on if the item is in the cart 
+     */
     
     private boolean isItemInCart(String name){
         for (int i = 0; i < cart.size(); i++) {
@@ -299,33 +305,23 @@ public class WebshopMB implements Serializable {
         return false;
     }
     
-    private String getItemNameParam(FacesContext fc ){
-        Map<String,String> params = 
-                fc.getExternalContext().getRequestParameterMap();
-	  String action = params.get("itemname");
-        System.out.println("Button param itemname!! " + action);
-        
-        return action;
-    }
     
-    private int getItemPriceParam(FacesContext fc ){
-        Map<String,String> params = 
-                fc.getExternalContext().getRequestParameterMap();
-	  int action = Integer.parseInt(params.get("itemprice"));
-        System.out.println("Button param itemname!! " + action);
-        
-        return action;
-    }
-
-    private String getParamUsername(){
+    /**
+     * Will get form parameter specified parameter name. Private helper function.
+     * @Param The parameter name 
+     * @Return Will return parameter value if the parameter exists 
+     */
+    private String getParam(String paramName){
         FacesContext fc = FacesContext.getCurrentInstance();
         Map<String,String> params = 
                 fc.getExternalContext().getRequestParameterMap();
-	  String username = params.get("username");
-          System.out.println("getParamUsername"+username);
-          return username;
+	  String paramValue = params.get(paramName);
+     
         
+        return paramValue;
     }
+    
+    
     
     
     /**
