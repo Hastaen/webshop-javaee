@@ -56,6 +56,7 @@ public class WebshopMB implements Serializable {
 
    
     private String message = null;
+    private String errormessage = null;
     private String cartmessage = null;
     private int units;
 
@@ -90,16 +91,10 @@ public class WebshopMB implements Serializable {
     
     public void registeraccount(){
         if(USEHAND.registerUser(username, userpassword, lastname, firstname,mail)){
-            
-            System.out.println("User is now registered, try to login!");
             this.message = "User is now registered, try to login!";
         }else{
-            System.out.println("User is already in database, try different username!");
-            this.message = "User is already in database, try different username!";
-            
+            this.message = "User is already in database, try different username!";  
         }
-        
-        
     }
     
     public String checkout(){
@@ -196,6 +191,9 @@ public class WebshopMB implements Serializable {
         
     }
     
+    
+    
+    
     public void addItemQuantity(){
         
         FacesContext fc = FacesContext.getCurrentInstance();
@@ -204,9 +202,7 @@ public class WebshopMB implements Serializable {
 	  String action = params.get("itemname");
           String uiindex = params.get("uiindex");
           String un = params.get("uirepeat:"+uiindex+":inputform:inputtext");
-          System.out.println("AIQ param map!! " + params);
-        System.out.println("AIQ param itemname!! " + action);
-        System.out.println("AIQ units!! " + un);
+        
           if (ADMIN.addUnits(action, Integer.parseInt(un))) {
             //worked
             }else{
@@ -215,6 +211,11 @@ public class WebshopMB implements Serializable {
         
     }
     
+    /**
+     * Creates new user.
+     * @param Will take param from form, that has the item name.
+     * @return The item will be added to .
+     */
     
     public void addToCart(){
         String iname;
@@ -252,7 +253,7 @@ public class WebshopMB implements Serializable {
         return false;
     }
     
-    public String getItemNameParam(FacesContext fc ){
+    private String getItemNameParam(FacesContext fc ){
         Map<String,String> params = 
                 fc.getExternalContext().getRequestParameterMap();
 	  String action = params.get("itemname");
@@ -261,7 +262,7 @@ public class WebshopMB implements Serializable {
         return action;
     }
     
-    public int getItemPriceParam(FacesContext fc ){
+    private int getItemPriceParam(FacesContext fc ){
         Map<String,String> params = 
                 fc.getExternalContext().getRequestParameterMap();
 	  int action = Integer.parseInt(params.get("itemprice"));
@@ -270,7 +271,7 @@ public class WebshopMB implements Serializable {
         return action;
     }
 
-    public String getParamUsername(){
+    private String getParamUsername(){
         FacesContext fc = FacesContext.getCurrentInstance();
         Map<String,String> params = 
                 fc.getExternalContext().getRequestParameterMap();
@@ -279,6 +280,13 @@ public class WebshopMB implements Serializable {
           return username;
         
     }
+    
+    
+    /**
+     * Login for the user.
+     * @param No param, but will use var that are set with JSF binding.
+     * @return If the password and username is ok, and the user is not banned the function will return success. Else false.
+     */
     
     public String login(){
        
@@ -299,15 +307,25 @@ public class WebshopMB implements Serializable {
 
                 isloggedin = true;
                 return "success";
-            }
+            }else{
+                    //User has wrong password or is banned.
+                    errormessage = "The Password/Username is wrong or account have been BANNED";
+                    return "error";
+                }
             
             
         }else{
             return "fail";
         }
       
-           return "fail";
+           
     }
+    
+    /**
+     * Logut for the user .
+     * @param No parameter but will global var that is set in login function
+     * @return Void function, but it will set booleans to false and clear the shopping cart.
+     */
     
     public void logout(){
         if (isloggedin == true) {
@@ -488,4 +506,14 @@ public class WebshopMB implements Serializable {
     public void setNewitemdesc(String newitemdesc) {
         this.newitemdesc = newitemdesc;
     }
+    
+    
+    public String getErrormessage() {
+        return errormessage;
+    }
+
+    public void setErrormessage(String errormessage) {
+        this.errormessage = errormessage;
+    }
+    
 }

@@ -71,7 +71,7 @@ public class UserHandler {
         try {
             Users result = (Users)logInQuery.getSingleResult();
              System.out.println("Before rescheck " + username +" " +password);
-        if ((result.getPassword().equals(password)) && (result.getIsbanned() != false)) {
+        if ((result.getPassword().equals(password)) && (result.getIsbanned() != true) ) {
             System.out.println("User could log in with pass (inside UH) " + username +" " +password);
             this.userName = username;
             this.firstName = result.getFirstname();

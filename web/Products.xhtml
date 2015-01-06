@@ -53,8 +53,8 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><h:link value="Home" outcome="index" /></li>
-            <li><h:link value="Products" outcome="Products" /></li>
+            <li><h:link value="Home" outcome="index" /></li>
+            <li class="active"><h:link value="Products" outcome="Products" /></li>
             <li><h:link value="Register" outcome="Register" /></li>
             <li><h:link rendered="#{webshopMB.isadmin == true}" value="Admin" outcome="AdminView" /></li>
           </ul>
@@ -119,7 +119,7 @@
             
            
             <h:commandButton class="btn btn-success" rendered="#{webshopMB.isloggedin == true}" value="Checkout" action="#{webshopMB.checkout()}"/>
-            <h:commandButton class="btn btn-success" rendered="#{webshopMB.isloggedin == false}" value="You have to login to Checkout" action="#"/>
+            <h:outputText class="list-group-item" rendered="#{webshopMB.isloggedin == false}" value="You have to login to Checkout"/>
             <h:commandButton class="btn btn-danger" value="Clear" action="#{webshopMB.clearcart()}"/>
         </h:form>
             

@@ -26,8 +26,10 @@ public class ItemHandler {
 
 
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+   /**
+     * Will get all the items in DB.
+     * @return List of all the items or a empty list.
+     */
 
 public List<Items> getAllItems(){
     
@@ -40,11 +42,6 @@ public List<Items> getAllItems(){
     
 }
 
-public boolean getItem(String name){
-    
-    
-    return false;
-}
 
  /**
      * Decreases number of units in stock.
