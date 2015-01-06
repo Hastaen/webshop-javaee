@@ -7,6 +7,11 @@ Uses JSF, EJB and JPA.
 Running on Glassfish and uses Derby(MySql) as DB
 Using JTA with resource and connection pool made in Admin webconsole. 
 
+All users created with the following script will have a password that is identical to their username.
+hedvig (administrator)
+anna (banned)
+kalle
+
 DB scripts
 
 CREATE TABLE Items (
