@@ -113,12 +113,12 @@ public class UserHandler {
         logInQuery.setParameter("username", username);
          Users result =null;
         
-            System.out.println("Registeruser, before getsingleresult!!!!!!!!!!!!!!!!!!!");
+          
         try {
             result = (Users)logInQuery.getSingleResult();
         
         } catch (NoResultException e) {
-            System.out.println("Exception in finduserby username!!!!!!!!!!!!!!!!!!!");
+            System.out.println("NoResultException : user " + username);
             return result;
         }
         

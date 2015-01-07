@@ -16,8 +16,6 @@ import java.util.*;
 
 
 import javax.ejb.EJB;
-import javax.enterprise.context.Conversation;
-import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -29,7 +27,6 @@ import javax.inject.Named;
  */
 @Named("webshopMB")
 @SessionScoped
-//@ConversationScoped
 public class WebshopMB implements Serializable {
 
     /**
@@ -74,8 +71,7 @@ public class WebshopMB implements Serializable {
     @EJB
     private AdminHandler ADMIN;
     
-    @Inject
-    private Conversation conversation;
+
     
     
      public WebshopMB() {
@@ -122,17 +118,16 @@ public class WebshopMB implements Serializable {
             cartmessage = "You do not have anything in your cart!";
             
         }else{
+            //Get the items from the cart and remove the units from the DB
             for (int i = 0; i < cart.size(); i++) {
                 tmpName = cart.get(i).getName();
                 tmpAmount = cart.get(i).getAmount();
                 if (ITEMHANDLER.removeUnits(tmpName, tmpAmount)) {
                     cartmessage = "Your purchase have been registered. Have a good day : )";
-                }else{
-                       cartmessage = "Not enough stock to complete the purchase, pleas try again!. Have a good day : )";
+                }else{      
+                    cartmessage = "Not enough stock to complete the purchase, pleas try again!. Have a good day : )";
                 }
-
             }
-            
         }
         clearcart();
     }
@@ -266,8 +261,7 @@ public class WebshopMB implements Serializable {
            ci.setAmount(1);
            cart.add(ci);
         }
-        calccartsum();
-        
+        calccartsum();   
     }
     
     /**
@@ -332,7 +326,6 @@ public class WebshopMB implements Serializable {
     
     public String login(){
        
-        //   startConversation();
         
         System.out.println("Login 1" + username +" " +userpassword);
         
@@ -380,19 +373,7 @@ public class WebshopMB implements Serializable {
         }
     }
     
-     private void startConversation() {
-        if (conversation.isTransient()) {
-            conversation.begin();
-        }
-    }
-
-    private void stopConversation() {
-        if (!conversation.isTransient()) {
-            conversation.end();
-        }
-    }
-    
-    
+  
    
     
     public List<Items> getTheproducts() {

@@ -170,9 +170,9 @@ public class AdminHandler {
             setAdminQuery.setParameter("username", username);
             Users result = (Users)setAdminQuery.getSingleResult();
             if (result.getUsername().equals(username) && !result.getIsadmin()) {
-            result.setIsadmin(Boolean.TRUE);
-            em.merge(result);
-            return true;
+                result.setIsadmin(Boolean.TRUE);
+                em.merge(result);
+                return true;
             }
             else {
                 return false;
@@ -183,5 +183,4 @@ public class AdminHandler {
                 return false;
         }
     }
-    
 }

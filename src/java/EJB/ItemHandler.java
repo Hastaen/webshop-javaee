@@ -51,17 +51,18 @@ public List<Items> getAllItems(){
      */
     public boolean removeUnits(String item, int amount) {
         try {
-            System.out.println("INSIDE ADMIN");
+            
             Query findItemQuery = em.createNamedQuery("Items.findByItemname", Items.class);
             findItemQuery.setParameter("itemname", item);
             Items result = (Items)findItemQuery.getSingleResult();
+            
             if ((result.getItemstock()-amount ) < 0) {
-             return false;   
+                return false;   
             }else{
-            System.out.println("INSIDE ADMIN, stock chnage");
-            result.setItemstock(result.getItemstock() - amount);
-            em.merge(result);
-            return true;
+               
+                result.setItemstock(result.getItemstock() - amount);
+                em.merge(result);
+                return true;
             }
         }
         catch (IllegalArgumentException | TransactionRequiredException e){
